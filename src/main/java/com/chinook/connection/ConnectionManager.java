@@ -8,10 +8,11 @@ import java.util.ArrayList;
 public class ConnectionManager {
     //connection url
     static final String URL = "jdbc:sqlite:src/main/resources/Chinook_Sqlite.sqlite";
+
     static private ConnectionManager instance;
     private Connection connection;
 
-    //put customer object in arraylist
+    //1. read all customers in the database
     public ArrayList<Customer> selectAllCustomers(){
         ArrayList<Customer> customers = new ArrayList<Customer>();
 
@@ -19,7 +20,7 @@ public class ConnectionManager {
             connection = DriverManager.getConnection(URL);
 
             PreparedStatement preparedStatement = connection.prepareStatement("SELECT CustomerId,FirstName,LastName," +
-                    "Phone,Email FROM customer");
+                    "Phone,Email,Country,PostalCode FROM customer");
 
             ResultSet  resultSet = preparedStatement.executeQuery();
 
@@ -29,7 +30,10 @@ public class ConnectionManager {
                         resultSet.getString("firstName"),
                         resultSet.getString("lastName"),
                         resultSet.getString("phone"),
-                        resultSet.getString("email")
+                        resultSet.getString("email"),
+                        resultSet.getString("country"),
+                        resultSet.getString("postalCode")
+
 
                 ));
             }
@@ -38,6 +42,44 @@ public class ConnectionManager {
             e.printStackTrace();
         }
         return customers;
+    }
+    //2.
+    public Customer selectSpecificCustomer(int customerId){
+        Customer customer = null;
+
+        try {
+            //connection
+            connection = DriverManager.getConnection(URL);
+
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT CustomerId,FirstName,LastName,Phone,Email,Country,PostalCode FROM customer WHERE CustomerId = ?");
+            preparedStatement.setString(1, String.valueOf(customerId));
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while(resultSet.next()){
+                customer = new Customer(
+                        resultSet.getString("customerId"),
+                        resultSet.getString("firstName"),
+                        resultSet.getString("lastName"),
+                        resultSet.getString("phone"),
+                        resultSet.getString("email"),
+                        resultSet.getString("country"),
+                        resultSet.getString("postalCode")
+
+
+                );
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return customer;
     }
 
     //singleton pattern. There can only be one instance of this.

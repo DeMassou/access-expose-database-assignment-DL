@@ -17,7 +17,9 @@ public class Main {
 
         ConnectionManager connectionManager = new ConnectionManager();
         ArrayList<Customer> customers = connectionManager.selectAllCustomers();
+        Customer customer = connectionManager.selectSpecificCustomer(1);
         printCustomers(customers);
+        printCustomer(customer);
     }
 
     public static void printCustomers(ArrayList<Customer> customers) {
@@ -31,6 +33,19 @@ public class Main {
             }
         } else {
             System.out.println("No customers found!");
+        }
+    }
+
+    public static void printCustomer(Customer customer){
+        if(customer != null){
+            System.out.println(customer.getCustomerId());
+            System.out.println(customer.getFirstName());
+            System.out.println(customer.getLastName());
+            System.out.println(customer.getPhone());
+            System.out.println(customer.getEmail());
+        }else{
+            System.out.println("No customer Id found!");
+
         }
     }
 

@@ -6,15 +6,19 @@ public class Customer {
     private String lastName;
     private String phone;
     private String email;
+    private String country;
+    private String postalCode;
 
 
     //Constructor Created
-    public Customer(String customerId, String firstName, String lastName, String phone, String email) {
+    public Customer(String customerId, String firstName, String lastName, String phone, String email, String country, String postalCode) {
         this.customerId = customerId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phone = phone;
         this.email = email;
+        this.country = country;
+        this.postalCode = postalCode;
     }
 
 
@@ -57,5 +61,21 @@ public class Customer {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getPostalCode() {
+        return postalCode;
+    }
+
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
     }
 }
