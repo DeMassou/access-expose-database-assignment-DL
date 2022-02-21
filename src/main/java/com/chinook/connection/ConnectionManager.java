@@ -43,7 +43,8 @@ public class ConnectionManager {
         }
         return customers;
     }
-    //2.
+
+    //2. Read specific customer from database by id
     public Customer selectSpecificCustomer(int customerId){
         Customer customer = null;
 
@@ -80,6 +81,74 @@ public class ConnectionManager {
             }
         }
         return customer;
+    }
+
+    //3. Read specific customer by name
+    public Customer selectCustomerByName(String firstName){
+        Customer customer = null;
+
+        try{
+            connection = DriverManager.getConnection(URL);
+
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM customer WHERE FirstName LIKE 'Leonie' ");
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while(resultSet.next()){
+                customer = new Customer(
+                        resultSet.getString("customerId"),
+                        resultSet.getString("firstName"),
+                        resultSet.getString("lastName"),
+                        resultSet.getString("phone"),
+                        resultSet.getString("email"),
+                        resultSet.getString("country"),
+                        resultSet.getString("postalCode")
+
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return customer;
+    }
+
+    //4.
+    public ArrayList<Customer> selectPageOfCustomers(){
+
+        ArrayList<Customer> customers = new ArrayList<Customer>();
+
+        try{
+            connection = DriverManager.getConnection(URL);
+
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT CustomerId,FirstName,LastName," +
+                    "Phone,Email,Country,PostalCode FROM customer LIMIT 10 OFFSET 50");
+
+            ResultSet  resultSet = preparedStatement.executeQuery();
+
+            while(resultSet.next()){
+                customers.add(new Customer(
+                        resultSet.getString("customerId"),
+                        resultSet.getString("firstName"),
+                        resultSet.getString("lastName"),
+                        resultSet.getString("phone"),
+                        resultSet.getString("email"),
+                        resultSet.getString("country"),
+                        resultSet.getString("postalCode")
+
+                ));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return customers;
     }
 
     //singleton pattern. There can only be one instance of this.
